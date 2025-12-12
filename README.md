@@ -22,7 +22,7 @@
 
 ```bash
 # 1. Clone the repository
-git clone [https://github.com/YOUR_USERNAME/MMEDIT.git](https://github.com/YOUR_USERNAME/MMEDIT.git)
+git clone https://github.com/xycs6k8r2Anonymous/MMEdit.git
 cd MMEDIT
 
 # 2. Create environment
