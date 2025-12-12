@@ -136,6 +136,25 @@ class AudioWaveformDataset(HDF5DatasetMixin):
                     waveform = waveform.reshape(-1)
 
         # 3) resample
+
+        waveform_np = waveform.cpu().numpy()
+
+        if int(orig_sr) > 24000:
+            if waveform_np.ndim == 1:
+                waveform_np = librosa.resample(
+                    waveform_np, orig_sr=int(orig_sr), target_sr=16000
+                )
+            else:
+                tmp_channels = []
+                for c in range(waveform_np.shape[0]):
+                    resampled_c = librosa.resample(
+                        waveform_np[c], orig_sr=int(orig_sr), target_sr=16000
+                    )
+                    tmp_channels.append(resampled_c)
+                waveform_np = np.stack(tmp_channels, axis=0)
+            orig_sr = 16000  
+            waveform= torch.from_numpy(waveform_np).to(waveform.device)
+
         if self.target_sr and int(self.target_sr) != int(orig_sr):
 
             waveform_np = waveform.cpu().numpy()

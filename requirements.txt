@@ -13,3 +13,4 @@ torchaudio
 soundfile
 tensorboard
 swanlab
+librosa

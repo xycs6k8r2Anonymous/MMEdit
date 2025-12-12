@@ -1,9 +1,9 @@
 # bash ./bash_scripts/infer.sh > logs/infer.log 2>&1
 
 
-CUDA_VISIBLE_DEVICES=1 python inference.py \
-    data@data_dict=test \
-    +ckpt_dir=/mnt/petrelfs/taoye/workspace/editing/exp/mmdit_final3/checkpoints/best \
+CUDA_VISIBLE_DEVICES=0 python inference.py \
+    data@data_dict=example \
+    +ckpt_dir=ckpt/mmedit \
     +use_best=true \
     # +ckpt_dir=experiments/tta/epoch_81
 

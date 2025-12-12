@@ -49,7 +49,7 @@ def main():
     elif "ckpt_dir" in config:
         ckpt_dir = Path(config["ckpt_dir"])
         ckpt_path = ckpt_dir / "model.safetensors"
-        exp_dir = ckpt_dir.parent.parent
+        exp_dir = ckpt_dir.parent
 
     print(f'\n ckpt path: {ckpt_path}\n ')
 
