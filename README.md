@@ -1,81 +1,24 @@
-<<<<<<< HEAD
-# MMEDIT: Audio Generation based on Qwen2-Audio 7B
-=======
 # MMEDIT
->>>>>>> bab6a17ae1335d22043dfa6fa9bde0c13b2b77f4
 
 [![arXiv](https://img.shields.io/badge/arXiv-25xx.xxxxx-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/25xx.xxxxx)
-[![Hugging Face Models](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue)](https://huggingface.co/YOUR_USERNAME/MMEDIT)
+[![Hugging Face Models](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue)](https://huggingface.co/CocoBro/MMEdit)
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellow)](./LICENSE)
-
-<<<<<<< HEAD
-=======
-[![arXiv](https://img.shields.io/badge/arXiv-25xx.xxxxx-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/25xx.xxxxx)
-[![Hugging Face Models](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue)](https://huggingface.co/YOUR_USERNAME/MMEDIT)
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellow)](./LICENSE)
->>>>>>> bab6a17ae1335d22043dfa6fa9bde0c13b2b77f4
 
 
 ## Introduction
 🟣 **MMEDIT** is a state-of-the-art audio generation model built upon the powerful [Qwen2-Audio 7B](https://huggingface.co/Qwen/Qwen2-Audio-7B). It leverages the robust audio understanding and instruction-following capabilities of the large language model to achieve precise and high-fidelity audio editing.
 
-<<<<<<< HEAD
 ---
+## Model Download
+| Models   | 🤗 Hugging Face |
+|-------|-------|
+| MMEdit| [MMEdit](https://huggingface.co/CocoBro/MMEdit) |
 
-## Model Usage
-
-### 🔧 Dependencies and Installation
-- Python >= 3.10
-- [PyTorch >= 2.3.0](https://pytorch.org/)
-- [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
-- Dependent models:
-  - [Qwen/Qwen2-Audio-7B](https://huggingface.co/Qwen/Qwen2-Audio-7B), download into `./ckpt/qwen2-audio-7B/`
-
-```bash
-# 1. Clone the repository
-git clone [https://github.com/YOUR_USERNAME/MMEDIT.git](https://github.com/YOUR_USERNAME/MMEDIT.git)
-cd MMEDIT
-
-# 2. Create environment
-conda create -n mmedit python=3.10 -y
-conda activate mmedit
-
-# 3. Install PyTorch and dependencies
-pip install torch==2.3.0 torchaudio==2.3.0 torchvision --index-url https://download.pytorch.org/whl/cu121
-pip install packaging ninja && pip install flash-attn==2.7.0.post2 --no-build-isolation
-pip install -r requirements.txt
-```
-
----
-
-## 📂 Data Preparation
-
-For detailed instructions on the data pipeline, and dataset structure used for training, please refer to our separate documentation:
-
-👉 **[Data Pipeline & Preparation Guide](./docs/DATA_PIPELINE.md)**
-
-
-## ⚡ Quick Start
-
-### 1. Model Preparation 
-**MMEDIT relies on the Qwen2-Audio 7B model as its backbone.**
-Before running any inference or training code, you **must** download the pre-trained checkpoints and place them in the correct directory.
-
-
-### 2. Inference
-You can quickly generate audio with the following code:
-
-
-
----
-=======
-## Introduction
-🟣 **MMEDIT** is a state-of-the-art audio generation model built upon the powerful [Qwen2-Audio 7B](https://huggingface.co/Qwen/Qwen2-Audio-7B). It leverages the robust audio understanding and instruction-following capabilities of the large language model to achieve precise and high-fidelity audio editing.
+download our pretrained model into ./ckpt/mmedit/
 
 ---
 
 ## Model Usage
-
 ### 🔧 Dependencies and Installation
 - Python >= 3.10
 - [PyTorch >= 2.3.0](https://pytorch.org/)
@@ -96,9 +39,13 @@ conda activate mmedit
 pip install torch==2.3.0 torchaudio==2.3.0 torchvision --index-url https://download.pytorch.org/whl/cu121
 pip install packaging ninja && pip install flash-attn==2.7.0.post2 --no-build-isolation
 pip install -r requirements.txt
-```
 
----
+# Download Qwen2-Audio-7B
+huggingface-cli download Qwen/Qwen2-Audio-7B --local-dir ./ckpt/qwen2-audio-7B
+
+# Download MMEdit (Our Model)
+huggingface-cli download CocoBro/MMEdit --local-dir ./ckpt/mmedit
+```
 
 ## 📂 Data Preparation
 
@@ -109,29 +56,18 @@ For detailed instructions on the data pipeline, and dataset structure used for t
 
 ## ⚡ Quick Start
 
-### 1. Model Preparation 
-**MMEDIT relies on the Qwen2-Audio 7B model as its backbone.**
-Before running any inference or training code, you **must** download the pre-trained checkpoints and place them in the correct directory.
 
 
-### 2. Inference
-You can quickly generate audio with the following code:
 
->>>>>>> bab6a17ae1335d22043dfa6fa9bde0c13b2b77f4
+### 1. Inference
+You can quickly generate example audio with the following code:
 
+```
+bash bash_scripts/infer.sh
+```
 
----
+The output will be save at inference/example
 
-<<<<<<< HEAD
-## 🚀 Usage
-
-### 1. Configuration
-Before running inference or training, please check `configs/config.yaml`. The project uses `hydra` for configuration management, allowing easy overrides via command line.
-
-### 2. Inference
-To run batch inference using the provided scripts:
-
-=======
 
 ---
 
@@ -143,7 +79,6 @@ Before running inference or training, please check `configs/config.yaml`. The pr
 ### 2. Inference
 To run batch inference using the provided scripts:
 
->>>>>>> bab6a17ae1335d22043dfa6fa9bde0c13b2b77f4
 ```bash
 cd src
 bash bash_scripts/inference.sh
@@ -183,8 +118,4 @@ If you find this project useful, please cite our paper:
   journal={arXiv preprint arXiv:25xx.xxxxx},
   year={2024}
 }
-<<<<<<< HEAD
 ```
-=======
-```
->>>>>>> bab6a17ae1335d22043dfa6fa9bde0c13b2b77f4
