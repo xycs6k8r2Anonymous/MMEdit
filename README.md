@@ -1,4 +1,5 @@
-# MMEDIT: Audio Generation based on Qwen2-Audio 7B
+# MMEDIT
+
 
 [![arXiv](https://img.shields.io/badge/arXiv-25xx.xxxxx-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/25xx.xxxxx)
 [![Hugging Face Models](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue)](https://huggingface.co/YOUR_USERNAME/MMEDIT)
