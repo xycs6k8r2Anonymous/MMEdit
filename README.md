@@ -1,101 +1,111 @@
-# Generation Audio Generation with Instructions
+# MMEDIT: Audio Generation based on Qwen2-Audio 7B
+
+[![arXiv](https://img.shields.io/badge/arXiv-25xx.xxxxx-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/25xx.xxxxx)
+[![Hugging Face Models](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue)](https://huggingface.co/YOUR_USERNAME/MMEDIT)
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellow)](./LICENSE)
 
 
-## Data Format
 
+## Introduction
+🟣 **MMEDIT** is a state-of-the-art audio generation model built upon the powerful [Qwen2-Audio 7B](https://huggingface.co/Qwen/Qwen2-Audio-7B). It leverages the robust audio understanding and instruction-following capabilities of the large language model to achieve precise and high-fidelity audio editing.
 
+---
 
+## Model Usage
 
-## Config-related Features
+### 🔧 Dependencies and Installation
+- Python >= 3.10
+- [PyTorch >= 2.3.0](https://pytorch.org/)
+- [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
+- Dependent models:
+  - [Qwen/Qwen2-Audio-7B](https://huggingface.co/Qwen/Qwen2-Audio-7B), download into `./ckpt/qwen2-audio-7B/`
 
-We use `hydra` + `omegaconf` to organize the training configuration.
-`hydra` organizes the configuration into separate modules, and supports command line overrides.
-`omegaconf` supports custom resolvers, so fields in YAML can be set more dynamically.
-
-### Resolvers and Variable Interpolation by omegaconf
-
-* [Variable interpolation](https://omegaconf.readthedocs.io/en/latest/usage.html#variable-interpolation) supported by omegaconf is used to reuse configuration values in YAML
-* Custom resolvers must be registered in [register_omegaconf_resolvers()](utils/config.py#L33)
-
-### Hydra Defaults List
-The YAML config uses the feature of [hydra defaults list](https://hydra.cc/docs/advanced/defaults_list/). For example, [this line](configs/default.yaml#L4):
-```YAML
-defaults:
-- data@train_dataloader.dataset.datasets: train
-```
-indicates that config in `${config_path}/data/train.yaml` (where `${config_path}` is `configs` by default) will be loaded and set as the value of `train_dataloader.dataset.datasets`.
-
-Generally, `a@b: c` means `${config_path}/a/c.yaml` will be loaded and set as the value of `b`.
-
-### Hydra Override Examples
-
-#### Example 1
 ```bash
-python inference.py +data_dict.vggsound_clip.test.max_samples=100
-```
-When we use `vggsound_clip` data, we need to directly override the most inner field instead of the pointer (pointed by the default list).
+# 1. Clone the repository
+git clone [https://github.com/YOUR_USERNAME/MMEDIT.git](https://github.com/YOUR_USERNAME/MMEDIT.git)
+cd MMEDIT
 
-#### Example 2
+# 2. Create environment
+conda create -n mmedit python=3.10 -y
+conda activate mmedit
+
+# 3. Install PyTorch and dependencies
+pip install torch==2.3.0 torchaudio==2.3.0 torchvision --index-url https://download.pytorch.org/whl/cu121
+pip install packaging ninja && pip install flash-attn==2.7.0.post2 --no-build-isolation
+pip install -r requirements.txt
+```
+
+---
+
+## 📂 Data Preparation
+
+For detailed instructions on the data pipeline, and dataset structure used for training, please refer to our separate documentation:
+
+👉 **[Data Pipeline & Preparation Guide](./docs/DATA_PIPELINE.md)**
+
+
+## ⚡ Quick Start
+
+### 1. Model Preparation 
+**MMEDIT relies on the Qwen2-Audio 7B model as its backbone.**
+Before running any inference or training code, you **must** download the pre-trained checkpoints and place them in the correct directory.
+
+
+### 2. Inference
+You can quickly generate audio with the following code:
+
+
+
+---
+
+
+---
+
+## 🚀 Usage
+
+### 1. Configuration
+Before running inference or training, please check `configs/config.yaml`. The project uses `hydra` for configuration management, allowing easy overrides via command line.
+
+### 2. Inference
+To run batch inference using the provided scripts:
+
 ```bash
-accelerate launch train.py \
-  model/content_adapter=prefix_adapter
+cd src
+bash bash_scripts/inference.sh
 ```
-This is an example of overriding a config group in the config that is not at the top level.
 
-## Configure Training
+### 3. Training
+Ensure you have downloaded the **Qwen2-Audio 7B** checkpoint to `./ckpt/qwen2-audio-7B` and prepared your data according to the [Data Pipeline Guide](./docs/DATA_PIPELINE.md).
 
-Like pytorch-lightning, the training framework makes the training on new models, datasets and loss functions easier.
-The most efforts lie in implementing these components and write YAML configs correspondingly.
-
-### Implement Dataset, Model, Loss, Lr Scheduler ...
-This part is the same as normal PyTorch-based training pipeline.
-
-### Implement Custom Trainer
-
-Similar to `lightning.LightningModule` in pytorch-lightning, we define a bunch of hooks in the training loop.
-To customize the training process, minimally we just need to define the behavior of `training_step` and `validation_step`.
-We can also add other behavior in many places, e.g., `on_train_start` and `on_validation_start`.
-
-[audio_generation_trainer.py](audio_generation_trainer.py) gives an example.
-
-### Write YAML Files
-
-The most labor-extensive part may be to write YAML configs to use the dataset, model, ..., and trainer defined above.
-Among them, "train_dataloader", "val_dataloader", "optimizer", "lr_scheduler" and "loss_fn" must be specified.
-
-The format uses hydra-style, i.e.,
-```YAML
-object:
-  _target_: module.submoule.Class
-  param1: value1
-  param2: value2
-  sub_object:
-    _target_: module.submodule.SubClass
-    param1: value1
-    param2: value2
-```
-The object will be instantiated recursively. 
-
-### Launch Training
-Training is launched through `train.py`:
 ```bash
-accelerate launch train.py
-```
-To specify the config YAML file:
-```bash
-accelerate launch train.py --config-path path/to/config/dir --config-name conf 
-```
-This will use `path/to/config/dir/conf.yaml` as the configuration entrypoint, and `${HF_HOME}/accelerate/default_config.yaml` for accelerate configuration.
-
-It supports convenient override via hydra grammar, e.g.
-```bash
-accelerate launch --config_file configs/accelerate/8gpus.yaml train.py \
-    warmup_params.warmup_steps=500 \
-    train_dataloader.batch_size=12 \
-    val_dataloader.batch_size=12 \
-    epochs=100
+cd src
+# Launch distributed training
+bash bash_scripts/train_dist.sh
 ```
 
-## TODO
-- [ ] Implement the fusion of time-independent and time-varying condition
-- [ ] Implement evaluation metrics of several tasks
+---
+
+## 📝 Todo
+- [ ] Release inference code and checkpoints.
+- [ ] Release training scripts.
+- [ ] Add HuggingFace Gradio Demo.
+- [ ] Release evaluation metrics and post-processing tools.
+
+## 🤝 Acknowledgement
+We thank the following open-source projects for their inspiration and code:
+* [Qwen2-Audio](https://github.com/QwenLM/Qwen2-Audio)
+* [Uniflowaudio](https://github.com/wsntxxn/UniFlow-Audio)
+* [AudioTime](https://github.com/wsntxxn/UniFlow-Audio)
+
+
+## 🖊️ Citation
+If you find this project useful, please cite our paper:
+
+```bibtex
+@article{mmedit2024,
+  title={MMEDIT: Audio Generation based on Qwen2-Audio 7B},
+  author={Your Name and Collaborators},
+  journal={arXiv preprint arXiv:25xx.xxxxx},
+  year={2024}
+}
+```
