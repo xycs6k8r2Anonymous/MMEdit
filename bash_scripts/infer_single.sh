@@ -1,4 +1,4 @@
-AUDIO_PATH="/mnt/petrelfs/taoye/workspace/data/audiocaps_v2/train/Ym8O802VvJes.wav"
+AUDIO_PATH="inference/example/Ym8O802VvJes.wav"
 CAPTION="Mix in dog barking in the middle."
 
 
