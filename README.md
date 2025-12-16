@@ -24,7 +24,7 @@ download our pretrained model into ./ckpt/mmedit/
 - [PyTorch >= 2.3.0](https://pytorch.org/)
 - [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
 - Dependent models:
-  - [Qwen/Qwen2-Audio-7B](https://huggingface.co/Qwen/Qwen2-Audio-7B), download into `./ckpt/qwen2-audio-7B/`
+  - [Qwen/Qwen2-Audio-7B-Instruct](https://huggingface.co/Qwen/Qwen2-Audio-7B-Instruct), download into `./ckpt/qwen2-audio-7B-Instruct/`
 
 ```bash
 # 1. Clone the repository
@@ -40,8 +40,8 @@ pip install torch==2.3.0 torchaudio==2.3.0 torchvision --index-url https://downl
 pip install packaging ninja && pip install flash-attn==2.7.0.post2 --no-build-isolation
 pip install -r requirements.txt
 
-# Download Qwen2-Audio-7B
-huggingface-cli download Qwen/Qwen2-Audio-7B --local-dir ./ckpt/qwen2-audio-7B
+# Download Qwen2-Audio-7B-Instruct
+huggingface-cli download Qwen/Qwen2-Audio-7B-Instruct --local-dir ./ckpt/qwen2-audio-7B-instruct
 
 # Download MMEdit (Our Model)
 huggingface-cli download CocoBro/MMEdit --local-dir ./ckpt/mmedit
@@ -63,7 +63,7 @@ For detailed instructions on the data pipeline, and dataset structure used for t
 You can quickly generate example audio with the following code:
 
 ```
-bash bash_scripts/infer.sh
+bash bash_scripts/infer_single.sh
 ```
 
 The output will be save at inference/example
@@ -85,7 +85,7 @@ bash bash_scripts/inference.sh
 ```
 
 ### 3. Training
-Ensure you have downloaded the **Qwen2-Audio 7B** checkpoint to `./ckpt/qwen2-audio-7B` and prepared your data according to the [Data Pipeline Guide](./docs/DATA_PIPELINE.md).
+Ensure you have downloaded the **Qwen2-Audio-7B-Instruct** checkpoint to `./ckpt/qwen2-audio-7B-instruct` and prepared your data according to the [Data Pipeline Guide](./docs/DATA_PIPELINE.md).
 
 ```bash
 cd src
