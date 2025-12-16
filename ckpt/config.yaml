@@ -1,0 +1,93 @@
+sample_rate: 24000
+downsampling_ratio: 480
+seed: 42
+model:
+  autoencoder:
+    _target_: models.autoencoder.waveform.stable_vae.StableVAE
+    encoder:
+      _target_: models.autoencoder.waveform.stable_vae.OobleckEncoder
+      in_channels: 1
+      channels: 128
+      c_mults:
+      - 1
+      - 2
+      - 4
+      - 8
+      strides:
+      - 2
+      - 4
+      - 6
+      - 10
+      latent_dim: 256
+      use_snake: true
+    decoder:
+      _target_: models.autoencoder.waveform.stable_vae.OobleckDecoder
+      out_channels: 1
+      channels: 128
+      c_mults:
+      - 1
+      - 2
+      - 4
+      - 8
+      strides:
+      - 2
+      - 4
+      - 6
+      - 10
+      latent_dim: 128
+      use_snake: true
+      final_tanh: false
+    io_channels: 1
+    latent_dim: 128
+    downsampling_ratio: 480
+    sample_rate: 24000
+    pretrained_ckpt: ckpt/mmedit/vae/epoch=13-step=1000000.ckpt
+    bottleneck:
+      _target_: models.autoencoder.waveform.stable_vae.VAEBottleneck
+  backbone:
+    _target_: models.dit.mmdit_back.MMAudio
+    latent_dim: 128
+    text_dim: 1024
+    hidden_dim: 1024
+    depth: 12
+    fused_depth: 8
+    num_heads: 16
+    mlp_ratio: 4.0
+    latent_seq_len: 500
+    text_seq_len: 320
+    ta_context_dim: 128
+    ta_context_fusion: concat
+    ta_context_norm: false
+  content_dim: 1024
+  noise_scheduler_name: stabilityai/stable-diffusion-2-1
+  snr_gamma: 5.0
+  cfg_drop_ratio: 0.2
+  _target_: models.diffusion.SingleTaskCrossAttentionAudioDiffusion
+  content_encoder:
+    _target_: models.content_encoder.content_encoder.ContentEncoder
+    embed_dim: 1024
+    text_encoder:
+      _target_: models.content_encoder.llm_encoder.Qwen2AudioEmbedder
+      model_path: ckpt/qwen2-audio-7B-instruct
+      embed_dim: 1024
+      max_length: 320
+    audio_encoder:
+      _target_: models.autoencoder.waveform.stable_vae.StableVAEProjectorWrapper
+      vae_dim: 128
+      embed_dim: 128
+loss_fn:
+  _target_: losses.base.IndentityWrapper
+warmup_params:
+  warmup_steps: 1000
+  warmup_epochs: null
+  epoch_length: null
+gradient_accumulation_steps: 1
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 3.0e-05
+  weight_decay: 0.01
+lr_scheduler:
+  _target_: transformers.get_scheduler
+  name: linear
+epochs: 100
+epoch_length: null
