@@ -1,8 +1,8 @@
-AUDIO_PATH="inference/example/Ym8O802VvJes.wav"
+AUDIO_PATH="example/Ym8O802VvJes.wav"
 CAPTION="Mix in dog barking in the middle."
 
 
-CUDA_VISIBLE_DEVICES=0 python infer.py \
+CUDA_VISIBLE_DEVICES=1 python infer.py \
     +audio_path="$AUDIO_PATH" \
     +caption="$CAPTION" \
     +ckpt_dir=ckpt/mmedit \
